@@ -8,15 +8,21 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
                 username,
                 password,
             });
-            console.log(response.data);
-            // Handle login success (e.g., store token, redirect)
+
+            if (response.data && response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                // Redirect to the dashboard or another page
+            } else {
+                setError('Invalid credentials');
+            }
         } catch (err) {
-            setError('Invalid credentials');
+            setError('An error occurred. Please try again.');
         }
     };
 
@@ -41,4 +47,3 @@ const Login = () => {
 };
 
 export default Login;
-
